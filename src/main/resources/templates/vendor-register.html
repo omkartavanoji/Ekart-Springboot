@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VENDOR-REGISTRATION</title>
+</head>
+
+<body>
+    <div>
+        <form action="/vendor/register" method="post" th:object="${vendordto}">
+            <label for="name">Name:</label>
+            <input type="text" th:field="*{name}" id="name" name="name"><span th:errors="*{name}"></span><br><br>
+
+            <label for="email">Email</label>
+            <input type="text" th:field="*{email}" id="email" name="email"><span th:errors="*{email}"></span><br><br>
+
+            <label for="mobile">Contact No:</label>
+            <input type="text" th:field="*{mobile}" id="mobile" name="mobile"><span th:errors="*{mobile}"></span><br><br>
+
+            <label for="password">Password</label>
+            <input type="text" th:field="*{password}" name="password" id="password"><span th:errors="*{password}"></span><br><br>
+
+            <label for="confirmpassword">Confirm Password</label>
+            <input type="text" th:field="*{confirmPassword}" name="confirmPassword" id="confirmpassword"><span th:errors="*{confirmPassword}"></span><br><br>
+
+            <button type="submit">REGISTER</button>
+        </form>
+    </div>
+</body>
+
+</html>
