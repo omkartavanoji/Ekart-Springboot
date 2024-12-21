@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <form action="/vendor/otp" method="post">
+        <input type="hidden" name="id" th:value="${id}">
+        <label for="otp">ENTER OTP:</label><br><br>
+        <input type="number" name="otp" id="otp">
+        <button type="submit">SUBMIT</button>
+        </form>
+</body>
+</html>
