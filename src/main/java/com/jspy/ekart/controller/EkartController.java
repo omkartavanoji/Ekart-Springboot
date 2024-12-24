@@ -37,7 +37,7 @@ public class EkartController {
 	@GetMapping("/vendor/otp/{id}")
 	public String loadOtpPage(@PathVariable int id,ModelMap modelMap) {
 		modelMap.put("id", id);
-		return "otp-page.html";
+		return "vendor-otp.html";
 	}
 	
 	@PostMapping("/vendor/otp")

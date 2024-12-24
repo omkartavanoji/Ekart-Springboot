@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
+import com.jspy.ekart.controller.helper.EmailSender_OTP;
+import com.jspy.ekart.controller.helper.PasswordAES;
 import com.jspy.ekart.dto.Vendordto;
 import com.jspy.ekart.repository.VendorRepository;
 
@@ -17,6 +19,9 @@ public class VendorService {
 
 	@Autowired
 	VendorRepository vendorRepository;
+	
+	@Autowired
+	EmailSender_OTP emailSender_OTP;
 
 	public String vendorRegistration(ModelMap modelMap, Vendordto vendordto) {
 		modelMap.put("vendordto", vendordto);
@@ -42,9 +47,11 @@ public class VendorService {
 		} else {
 			int otp = new Random().nextInt(100000, 1000000);
 			vendordto.setOtp(otp);
+			vendordto.setPassword(PasswordAES.encrypt(vendordto.getPassword()));
 			vendorRepository.save(vendordto);
-			// email Logic
 			System.out.println(vendordto.getOtp());
+			//email
+			emailSender_OTP.sendEmail(vendordto);
 			return "redirect:/vendor/otp/" + vendordto.getId();
 		}
 	}
