@@ -1,14 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOME</title>
+    <title>EKART - Home</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <div>
-        <h1>WELCOME TO VENDOR RESISTRATION PORTAL</h1>
-        <a href="/vendor/register"><button>VENDOR REGISTERATION</button></a>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md px-6 py-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <div class="text-2xl font-bold text-blue-600">EKART</div>
+            <!-- Hamburger Menu -->
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Links -->
+            <div id="menu" class="hidden md:flex space-x-6">
+                <a href="/vendor/register" class="text-gray-700 hover:text-blue-600 transition">Vendor Registration</a>
+                <a href="/vendor/login" class="text-gray-700 hover:text-blue-600 transition">Vendor Login</a>
+            </div>
+        </div>
+        <!-- Dropdown Menu -->
+        <div id="dropdown-menu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="/vendor/register" class="block text-gray-700 hover:text-blue-600 transition">Vendor Registration</a>
+            <a href="/vendor/login" class="block text-gray-700 hover:text-blue-600 transition">Vendor Login</a>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center flex-grow text-center px-6">
+        <div>
+            <h3 class="text-green-500 mb-2 text-lg font-semibold" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 mb-2 text-lg font-semibold" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-800 mt-10">Welcome to EKART</h1>
+        <p class="text-gray-600 mt-4 text-lg">
+            Your one-stop solution for all vendor needs. Register or log in to get started.
+        </p>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 text-center py-4 text-sm text-gray-600">
+        © 2024 EKART. All Rights Reserved.
+    </footer>
+
+    <!-- JavaScript for Menu Toggle -->
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const menu = document.getElementById('menu');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        menuBtn.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

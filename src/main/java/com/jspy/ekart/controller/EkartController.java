@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jspy.ekart.dto.Vendordto;
 import com.jspy.ekart.service.VendorService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -30,8 +31,8 @@ public class EkartController {
 	}
 
 	@PostMapping("/vendor/register")
-	public String vendorRegistration(@Valid Vendordto vendordto, BindingResult bindingResult) {
-		return vendorService.registeration(vendordto, bindingResult);
+	public String vendorRegistration(@Valid Vendordto vendordto, BindingResult bindingResult,HttpSession session) {
+		return vendorService.registeration(vendordto, bindingResult,session);
 	}
 	
 	@GetMapping("/vendor/otp/{id}")
@@ -41,8 +42,14 @@ public class EkartController {
 	}
 	
 	@PostMapping("/vendor/otp")
-	public String verifyOtp(@RequestParam int id, @RequestParam int otp) {
-		  return vendorService.verifyOtp(id,otp);
+	public String verifyOtp(@RequestParam int id, @RequestParam int otp,HttpSession session) {
+		  return vendorService.verifyOtp(id,otp,session);
+	}
+	
+	
+	@GetMapping("/vendor/login")
+	public String loadVendorLoginPage() {
+		return "vendor-login.html";
 	}
 
 }

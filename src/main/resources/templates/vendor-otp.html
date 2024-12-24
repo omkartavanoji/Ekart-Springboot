@@ -3,14 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>OTP Verification</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+    </style>
 </head>
-<body>
-        <form action="/vendor/otp" method="post">
+<body class="flex items-center justify-center min-h-screen">
+    <form action="/vendor/otp" method="post" class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <!-- Logo Placeholder -->
+        <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                V
+            </div>
+        </div>
+        <h2 class="text-3xl font-extrabold mb-4 text-center text-gray-800">OTP Verification</h2>
+        <!-- Success or Failure Message -->
+        <div>
+            <h3 class="text-green-500 text-center mb-2" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 text-center mb-2" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+        <!-- Hidden Field for ID -->
         <input type="hidden" name="id" th:value="${id}">
-        <label for="otp">ENTER OTP:</label><br><br>
-        <input type="number" name="otp" id="otp">
-        <button type="submit">SUBMIT</button>
-        </form>
+        <!-- OTP Input -->
+        <div class="mb-6">
+            <label for="otp" class="block text-sm font-medium text-gray-600">Enter OTP:</label>
+            <input type="number" name="otp" id="otp" placeholder="Enter your OTP" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
+        </div>
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition duration-300">Submit</button>
+    </form>
 </body>
 </html>

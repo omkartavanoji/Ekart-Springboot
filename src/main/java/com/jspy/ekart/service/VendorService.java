@@ -12,6 +12,7 @@ import com.jspy.ekart.controller.helper.PasswordAES;
 import com.jspy.ekart.dto.Vendordto;
 import com.jspy.ekart.repository.VendorRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Service
@@ -28,7 +29,7 @@ public class VendorService {
 		return "vendor-register.html";
 	}
 
-	public String registeration(@Valid Vendordto vendordto, BindingResult bindingResult) {
+	public String registeration(@Valid Vendordto vendordto, BindingResult bindingResult, HttpSession session) {
 		if (!vendordto.getPassword().equals(vendordto.getConfirmPassword())) {
 			bindingResult.rejectValue("confirmPassword", " error.confirmPassword",
 					"*Password and ConfirmPassword do not match");
@@ -49,20 +50,23 @@ public class VendorService {
 			vendordto.setOtp(otp);
 			vendordto.setPassword(PasswordAES.encrypt(vendordto.getPassword()));
 			vendorRepository.save(vendordto);
+			//email logic
+           //emailSender_OTP.sendEmail(vendordto);
 			System.out.println(vendordto.getOtp());
-			//email
-			emailSender_OTP.sendEmail(vendordto);
+			session.setAttribute("success", "OTP SENT SUCCESFULLY TO "+vendordto.getEmail());
 			return "redirect:/vendor/otp/" + vendordto.getId();
 		}
 	}
 
-	public String verifyOtp(int id, int otp) {
+	public String verifyOtp(int id, int otp,HttpSession session) {
 		Vendordto vendordto=vendorRepository.findById(id).orElseThrow();
 		 if (vendordto.getOtp()==otp) {
 			     vendordto.setVerified(true);
 			     vendorRepository.save(vendordto);
+			     session.setAttribute("success", "Vendor Account created Successfully");
 			    return "redirect:/";
 		} else { 
+			 session.setAttribute("failure", "PLEASE ENTER CORRECT OTP");
 			return "redirect:/vendor/otp/"+ vendordto.getId();
 		} 
 	}
