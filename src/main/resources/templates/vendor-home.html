@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Home</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md px-6 py-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <div class="text-2xl font-bold text-blue-600">EKART</div>
+            <!-- Empty Links Area -->
+            <div id="menu" class="hidden md:flex space-x-6"></div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center flex-grow text-center px-6">
+        <div>
+            <h3 class="text-green-500 mb-2 text-lg font-semibold" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 mb-2 text-lg font-semibold" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+        <h1 class="text-4xl font-bold text-gray-800 mt-10">WELCOME TO VENDOR HOME PAGE</h1>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 text-center py-4 text-sm text-gray-600">
+        © 2024 EKART. All Rights Reserved.
+    </footer>
+</body>
+</html>
