@@ -1,8 +1,6 @@
 package com.jspy.ekart.service;
 
-import java.lang.ProcessBuilder.Redirect;
 import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -90,9 +88,9 @@ public class VendorService {
 					// email logic
 					// emailSender_OTP.sendEmail(vendordto);
 					System.out.println(vendordto.getOtp());
-					session.setAttribute("success", "OTP SENT SUCCESFULLY TO " + vendordto.getEmail()+" FIRST VERIFY EMAIL FOR LOGGING IN");
+					session.setAttribute("success",
+							"OTP SENT SUCCESFULLY TO " + vendordto.getEmail() + " FIRST VERIFY EMAIL FOR LOGGING IN");
 					return "redirect:/vendor/otp/" + vendordto.getId();
-
 				}
 			} else {
 				session.setAttribute("failure", "PLEASE ENTER CORRECT PASSWORD");
