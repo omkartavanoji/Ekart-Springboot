@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>VENDOR PRODUCTS VIEW</title>
+</head>
+<body>
+	<table border="1px solid black">
+		<thead>
+			<tr>
+				<th>PRODUCT NAME</th>
+				<th>PRODUCT IMAGE</th>
+				<th>PRODUCT DESCRIPTION</th>
+				<th>PRODUCT CATEGORY</th>
+				<th>PRODUCT STOCK</th>
+				<th>PRODUCT PRICE</th>
+				<th>UPDATE</th>
+				<th>DELETE</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="product:${products}">
+				<th th:text="${product.productName}"></th>
+				<th><img th:src="${product.productImageLink}" alt="noimage"
+					height="200px" width="100px"></th>
+				<th th:text="${product.productDescription}"></th>
+				<th th:text="${product.productCategory}"></th>
+				<th th:text="${product.productStock}"></th>
+				<th th:text="${product.productPrice}"></th>
+				<th><a href=""><button>UPDATE</button></a></th>
+				<th><a th:href="'/delete/'+${product.id}"><button>DELETE</button></a></th>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

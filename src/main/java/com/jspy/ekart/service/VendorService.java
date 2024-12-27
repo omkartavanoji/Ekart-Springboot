@@ -1,14 +1,19 @@
 package com.jspy.ekart.service;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
+import com.jspy.ekart.controller.helper.CloudinaryImage;
 import com.jspy.ekart.controller.helper.EmailSender_OTP;
 import com.jspy.ekart.controller.helper.PasswordAES;
+import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.dto.Vendordto;
+import com.jspy.ekart.repository.ProductRepository;
 import com.jspy.ekart.repository.VendorRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +24,12 @@ public class VendorService {
 
 	@Autowired
 	VendorRepository vendorRepository;
+
+	@Autowired
+	CloudinaryImage cloudinaryImage;
+
+	@Autowired
+	ProductRepository productRepository;
 
 	@Autowired
 	EmailSender_OTP emailSender_OTP;
@@ -96,6 +107,37 @@ public class VendorService {
 				session.setAttribute("failure", "PLEASE ENTER CORRECT PASSWORD");
 				return "redirect:/vendor/login";
 			}
+		}
+	}
+
+	public String addProduct(Productdto productdto, HttpSession session) throws IOException {
+		if (session.getAttribute("vendordto") != null) {
+			Vendordto vendordto = (Vendordto) session.getAttribute("vendordto");
+			productdto.setVendordto(vendordto);
+			productdto.setProductImageLink(cloudinaryImage.uploadFile(productdto.getProductImage()));
+			productRepository.save(productdto);
+			session.setAttribute("success", "PRODUCT ADDED SUCCESSFULLY");
+			return "redirect:/vendor/home";
+		} else {
+			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");
+			return "redirect:/vendor/login";
+		}
+	}
+
+	public String loadVendorProductsPage(HttpSession session, ModelMap map) {
+		if (session.getAttribute("vendordto") != null) {
+			Vendordto vendordto = (Vendordto) session.getAttribute("vendordto");
+			List<Productdto> product = productRepository.findByVendordto(vendordto);
+			if (product.isEmpty()) {
+				session.setAttribute("failure", "NO PRODUCTS FOUND");
+				return "redirect:/vendor/home";
+			} else {
+				map.put("products", product);
+				return "vendor-view-product.html";
+			}
+		} else {
+			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");
+			return "redirect:/vendor/login";
 		}
 	}
 }
