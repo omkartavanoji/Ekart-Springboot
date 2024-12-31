@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin login</title>
+</head>
+
+<body>
+    <h1>ADMIN LOGIN</h1>
+    <div>
+        <h1 th:text="${session.success}"></h1>
+        <h1 th:text="${session.failure}"></h1>
+        <th:block th:text="${@messageRemover.remove()}"></th:block>
+    </div>
+    <form action="/admin/login" method="post">
+        <label for="username">Email:</label>
+        <input type="text" id="email" name="email"><br><br>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password"><br><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+
+</html>

@@ -10,7 +10,6 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Transient;
 import lombok.Data;
 
-
 @Data
 @Entity
 public class Productdto {
@@ -24,9 +23,9 @@ public class Productdto {
 	private String productDescription;
 	private String productCategory;
 	private String productImageLink;
+	private boolean Approved;
 	@Transient
 	private MultipartFile productImage;
-
 	@ManyToOne
 	Vendordto vendordto;
 

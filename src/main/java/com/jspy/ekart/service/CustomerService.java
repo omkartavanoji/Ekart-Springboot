@@ -8,17 +8,14 @@ import org.springframework.validation.BindingResult;
 
 import com.jspy.ekart.dto.Customerdto;
 import com.jspy.ekart.repository.CustomerRepository;
-
-import jakarta.mail.Session;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 
 @Component
 public class CustomerService {
 	@Autowired
 	CustomerRepository customerRepository;
 
-	public String customerRegistration(Customerdto customerdto, BindingResult bindingResult,HttpSession session) {
+	public String customerRegistration(Customerdto customerdto, BindingResult bindingResult, HttpSession session) {
 		if (!customerdto.getPassword().equals(customerdto.getConfirmPassword())) {
 			bindingResult.rejectValue("confirmPassword", "error.password",
 					"Password and Confirm Password do not match");
@@ -38,7 +35,7 @@ public class CustomerService {
 			customerRepository.save(customerdto);
 			System.out.println(otp);
 			// email logic
-			session.setAttribute("success", "OTP SENT SUCCESFULLY TO "+customerdto.getEmail());
+			session.setAttribute("success", "OTP SENT SUCCESFULLY TO " + customerdto.getEmail());
 			return "redirect:/customer/otp/" + customerdto.getId();
 		}
 	}
@@ -50,7 +47,7 @@ public class CustomerService {
 			customerRepository.save(customerdto);
 			session.setAttribute("success", "Customer Registered  Successfully");
 			return "redirect:/";
-		} else { 
+		} else {
 			session.setAttribute("failure", "Incorrect OTP Try again");
 			return "redirect:/customer/otp/" + customerdto.getId();
 		}
@@ -67,14 +64,15 @@ public class CustomerService {
 					session.setAttribute("customerdto", customerdto);
 					session.setAttribute("success", "Customer Logged in Successfully");
 					return "redirect:/customer/home";
-				} else { 
-                  int otp=new Random().nextInt(100000,999999);
-                  customerdto.setOtp(otp);
-                  customerRepository.save(customerdto);
-                  System.out.println(otp);
-                  //email Logic
-                  session.setAttribute("failure","OTP SENT SUCCESFULLY TO " + customerdto.getEmail() + " FIRST VERIFY EMAIL FOR LOGGING IN");
-                  return "redirect:/customer/otp/"+customerdto.getId();
+				} else {
+					int otp = new Random().nextInt(100000, 999999);
+					customerdto.setOtp(otp);
+					customerRepository.save(customerdto);
+					System.out.println(otp);
+					// email Logic
+					session.setAttribute("failure",
+							"OTP SENT SUCCESFULLY TO " + customerdto.getEmail() + " FIRST VERIFY EMAIL FOR LOGGING IN");
+					return "redirect:/customer/otp/" + customerdto.getId();
 				}
 			} else {
 				session.setAttribute("failure", "Incorrect Password");

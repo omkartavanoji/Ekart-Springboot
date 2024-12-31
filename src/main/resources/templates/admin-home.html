@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"><head>
+<meta charset="UTF-8">
+<title>Admin Home</title>
+</head>
+<body>
+  <h1>Welcome to Admin Home Page</h1>
+   <a href="/admin/logout"><button type="submit">Logout</button></a>
+  <div>
+        <h1 th:text="${session.success}"></h1>
+        <h1 th:text="${session.failure}"></h1>
+        <th:block th:text="${@messageRemover.remove()}"></th:block>
+    </div>
+       <a href="/admin/approve"><button type="submit">Approve Products</button></a>
+</body>
+</html>
+

@@ -122,7 +122,7 @@ public class VendorService {
 			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");
 			return "redirect:/vendor/login";
 		}
-	}
+	} 
 
 	public String loadVendorProductsPage(HttpSession session, ModelMap map) {
 		if (session.getAttribute("vendordto") != null) {
@@ -151,5 +151,4 @@ public class VendorService {
 			return "redirect:/vendor/login";
 		}
 	}
-
 }
