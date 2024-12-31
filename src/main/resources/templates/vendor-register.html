@@ -41,13 +41,13 @@
         </div>
         <!-- Password -->
         <div class="mb-4">
-            <label for="text" class="block text-sm font-medium text-gray-600">Password:</label>
+            <label for="password" class="block text-sm font-medium text-gray-600">Password:</label>
             <input type="password" th:field="*{password}" name="password" id="password" placeholder="Enter your password" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
             <span th:errors="*{password}" class="text-red-500 text-sm"></span>
         </div>
         <!-- Confirm Password -->
         <div class="mb-6">
-            <label for="text" class="block text-sm font-medium text-gray-600">Confirm Password:</label>
+            <label for="confirmpassword" class="block text-sm font-medium text-gray-600">Confirm Password:</label>
             <input type="password" th:field="*{confirmPassword}" name="confirmPassword" id="confirmpassword" placeholder="Please confirm your password" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
             <span th:errors="*{confirmPassword}" class="text-red-500 text-sm"></span>
         </div>

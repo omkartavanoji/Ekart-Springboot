@@ -12,7 +12,7 @@
     <nav class="bg-white shadow-md px-6 py-4">
         <div class="flex justify-between items-center">
             <!-- Logo -->
-            <div class="text-2xl font-bold text-blue-600">EKART</div>
+            <div class="text-2xl font-bold text-blue-600"><a href="/">EKART</a> </div>
             <!-- Hamburger Menu -->
             <div class="md:hidden">
                 <button id="menu-btn" class="text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
@@ -23,12 +23,16 @@
             </div>
             <!-- Links -->
             <div id="menu" class="hidden md:flex space-x-6">
+                <a href="/customer/register" class="text-gray-700 hover:text-blue-600 transition">Customer Registration</a>
+                <a href="/customer/login" class="text-gray-700 hover:text-blue-600 transition">Customer Login</a>
                 <a href="/vendor/register" class="text-gray-700 hover:text-blue-600 transition">Vendor Registration</a>
                 <a href="/vendor/login" class="text-gray-700 hover:text-blue-600 transition">Vendor Login</a>
             </div>
         </div>
         <!-- Dropdown Menu -->
         <div id="dropdown-menu" class="hidden md:hidden mt-4 space-y-2">
+            <a href="/customer/register" class="block text-gray-700 hover:text-blue-600 transition">Customer Registration</a>
+            <a href="/customer/login" class="block text-gray-700 hover:text-blue-600 transition">Customer Login</a>
             <a href="/vendor/register" class="block text-gray-700 hover:text-blue-600 transition">Vendor Registration</a>
             <a href="/vendor/login" class="block text-gray-700 hover:text-blue-600 transition">Vendor Login</a>
         </div>

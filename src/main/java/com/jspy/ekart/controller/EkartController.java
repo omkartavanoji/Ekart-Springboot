@@ -1,7 +1,6 @@
 package com.jspy.ekart.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.jspy.ekart.dto.Customerdto;
 import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.dto.Vendordto;
+import com.jspy.ekart.service.CustomerService;
 import com.jspy.ekart.service.VendorService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -21,6 +23,9 @@ import jakarta.validation.Valid;
 public class EkartController {
 	@Autowired
 	VendorService vendorService;
+
+	@Autowired
+	CustomerService customerService;
 
 	@GetMapping
 	public String loadHomepage() {
@@ -87,5 +92,59 @@ public class EkartController {
 	public String loadVendorProductsPage(HttpSession session, ModelMap map) {
 		return vendorService.loadVendorProductsPage(session, map);
 	}
+	
+	@GetMapping("/vendor/logout")
+	public String vendorLogout(HttpSession session) {
+		session.removeAttribute("vendordto");
+		session.setAttribute("success", "Logged out successfully");
+		return "redirect:/";
+	}
 
+	@GetMapping("/delete/{productId}")
+	public String deleteVendorProduct(@PathVariable("productId") int id, HttpSession session, ModelMap map) {
+		return vendorService.deleteVendorProduct(id, session, map);
+	}
+
+	@GetMapping("/customer/register")
+	public String loadCustomerRegistrationPage(ModelMap modelMap, Customerdto customerdto) {
+		modelMap.put("customerdto", customerdto);
+		return "customer-register.html";
+	}
+
+	@PostMapping("/customer/register")
+	public String customerRegistration(@Valid Customerdto customerdto, BindingResult bindingResult,HttpSession session) {
+		return customerService.customerRegistration(customerdto, bindingResult,session);
+	}
+
+	@GetMapping("/customer/otp/{customerId}")
+	public String loadCustomerOtpPage(@PathVariable("customerId") int id, ModelMap modelMap) {
+		modelMap.put("id", id);
+		return "customer-otp.html";
+	}
+
+	@PostMapping("/customer/otp")
+	public String CustomerVerifyOtp(@RequestParam int otp, @RequestParam int id, HttpSession session) {
+		return customerService.verifyOtp(otp, id, session);
+	}
+
+	@GetMapping("/customer/login")
+	public String loadCustomerLoginPage() {
+		return "customer-login.html";
+	}
+
+	@PostMapping("/customer/login")
+	public String customerLogin(@RequestParam String email, @RequestParam String password, HttpSession session) {
+		return customerService.customerLogin(email,password,session);
+	}
+	
+	@GetMapping("/customer/home")
+	public String loadCustomerHomePage(HttpSession session) {
+		if(session.getAttribute("customerdto")!=null) {
+			return "customer-home.html";
+		}
+		else {
+			session.setAttribute("failure", "Invalid Session First Login ");
+			return "redirect:/customer/login";
+		}
+	}
 }

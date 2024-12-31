@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <form action="/customer/login" method="post" class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-sm">
+        <!-- Logo Placeholder -->
+        <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                C
+            </div>
+        </div>
+        <h2 class="text-3xl font-extrabold mb-6 text-center text-gray-800">Customer Login</h2>
+
+        <!-- Success and Failure Messages -->
+        <div class="mb-4">
+            <h3 class="text-green-500 text-center text-lg font-semibold" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 text-center text-lg font-semibold" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-600">Email:</label>
+            <input type="text" name="email" id="email" placeholder="Enter your email" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" >
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-6">
+            <label for="password" class="block text-sm font-medium text-gray-600">Password:</label>
+            <input type="text" name="password" id="password" placeholder="Enter your password" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" required>
+        </div>	
+
+        <!-- Login Button -->
+        <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition duration-300">
+            Login
+        </button>
+    </form>
+</body>
+</html>

@@ -21,16 +21,16 @@ public class Vendordto {
 	private int id;
 	@Size(min = 5, max = 30, message = "* Enter Between 5-30 characters")
 	private String name;
-	@Email(message = "* Enter Proper Email")
+	@Email(message = "*Enter Proper Email")
 	@NotEmpty(message = "* It is Required Field")
 	private String email;
-	@DecimalMin(value = "6000000000", message = "* Enter Proper Mobile Number ")
+	@DecimalMin(value = "6000000000", message = "*Enter Proper Mobile Number ")
 	@DecimalMax(value = "9999999999", message = "* Enter Proper Mobile Number ")
-	private long mobile;
-	@Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", message = "* Enter atleast 8 characters consisting of one uppercase, one lowercase, one number, one special character")
+	private String mobile;
+	@Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", message = "*Enter atleast 8 characters consisting of one uppercase, one lowercase, one number, one special character")
 	private String password;
 	@Transient
-	@Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", message = "* Enter atleast 8 characters consisting of one uppercase, one lowercase, one number, one special character")
+	@Pattern(regexp = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$", message = "*Enter atleast 8 characters consisting of one uppercase, one lowercase, one number, one special character")
 	private String confirmPassword;
 	private int otp;
 	private boolean verified;

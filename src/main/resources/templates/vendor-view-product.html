@@ -1,36 +1,66 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="UTF-8">
-<title>VENDOR PRODUCTS VIEW</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Products View</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-	<table border="1px solid black">
-		<thead>
-			<tr>
-				<th>PRODUCT NAME</th>
-				<th>PRODUCT IMAGE</th>
-				<th>PRODUCT DESCRIPTION</th>
-				<th>PRODUCT CATEGORY</th>
-				<th>PRODUCT STOCK</th>
-				<th>PRODUCT PRICE</th>
-				<th>UPDATE</th>
-				<th>DELETE</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="product:${products}">
-				<th th:text="${product.productName}"></th>
-				<th><img th:src="${product.productImageLink}" alt="noimage"
-					height="200px" width="100px"></th>
-				<th th:text="${product.productDescription}"></th>
-				<th th:text="${product.productCategory}"></th>
-				<th th:text="${product.productStock}"></th>
-				<th th:text="${product.productPrice}"></th>
-				<th><a href=""><button>UPDATE</button></a></th>
-				<th><a th:href="'/delete/'+${product.id}"><button>DELETE</button></a></th>
-			</tr>
-		</tbody>
-	</table>
+<body class="bg-gradient-to-r from-blue-50 to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md py-4 px-6">
+        <div class="flex justify-between items-center">
+            <!-- Back Button -->
+            <a href="/vendor/home" class="text-blue-500 hover:text-blue-700 font-semibold text-lg">
+                Back 
+            </a>
+            <div class="text-2xl font-bold text-blue-600">Your Products</div>
+            <!-- Empty placeholder for balance -->
+            <div></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="p-6">
+        <!-- Success and Failure Messages -->
+        <div class="text-center">
+            <h3 class="text-green-500 font-semibold text-lg mb-4" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 font-semibold text-lg mb-4" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+
+        <!-- Product Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div th:each="product : ${products}" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                <!-- Product Image -->
+                <img th:src="${product.productImageLink}" alt="Product Image" class="h-72 w-full object-contain">
+                
+                <!-- Product Details -->
+                <div class="p-4">
+                    <h2 class="font-bold text-lg text-gray-800 mb-2" th:text="${product.productName}"></h2>
+                    <p class="text-sm text-gray-600 mb-1" th:text="'Description: ' + ${product.productDescription}"></p>
+                    <p class="text-sm text-gray-600 mb-1" th:text="'Category: ' + ${product.productCategory}"></p>
+                    <p class="text-sm text-gray-600 mb-1" th:text="'Stock: ' + ${product.productStock}"></p>
+                    <p class="text-lg font-semibold text-blue-500 mb-2" th:text="'Price: ₹' + ${product.productPrice}"></p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="px-4 pb-4 flex justify-between">
+                    <a href="#" class="bg-gradient-to-r from-green-400 to-green-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-green-500 hover:to-green-700 transition duration-300">
+                        UPDATE
+                    </a>
+                    <a th:href="'/delete/'+${product.id}" class="bg-gradient-to-r from-red-400 to-red-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-red-500 hover:to-red-700 transition duration-300">
+                        DELETE
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 text-center py-4 text-sm text-gray-600 mt-8">
+        © 2024 EKART. All Rights Reserved.
+    </footer>
 </body>
 </html>

@@ -8,7 +8,7 @@ public interface VendorRepository extends JpaRepository<Vendordto, Integer>{
 
 	 boolean existsByEmail(String email) ;
 
-   	boolean existsByMobile(long mobile);
+   	boolean existsByMobile(String mobile);
 
 	Vendordto findByEmail(String email);
 
