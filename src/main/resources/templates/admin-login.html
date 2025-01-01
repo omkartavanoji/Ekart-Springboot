@@ -3,22 +3,61 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+    </style>
 </head>
 
-<body>
-    <h1>ADMIN LOGIN</h1>
-    <div>
-        <h1 th:text="${session.success}"></h1>
-        <h1 th:text="${session.failure}"></h1>
-        <th:block th:text="${@messageRemover.remove()}"></th:block>
-    </div>
-    <form action="/admin/login" method="post">
-        <label for="username">Email:</label>
-        <input type="text" id="email" name="email"><br><br>
-        <label for="password">Password:</label>
-        <input type="text" id="password" name="password"><br><br>
-        <button type="submit">Login</button>
+<body class="flex items-center justify-center min-h-screen">
+    <!-- Login Form -->
+    <form action="/admin/login" method="post" class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
+        <!-- Logo Section -->
+        <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                A
+            </div>
+        </div>
+
+        <!-- Form Title -->
+        <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-6">Admin Login</h2>
+
+        <!-- Success and Failure Messages -->
+        <div class="mb-6">
+            <h3 class="text-green-500 text-center" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 text-center" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+
+        <!-- Email Input -->
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-600">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Enter your email"
+                class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                required>
+        </div>
+
+        <!-- Password Input -->
+        <div class="mb-6">
+            <label for="password" class="block text-sm font-medium text-gray-600">Password:</label>
+            <input type="text" name="password" id="password" placeholder="Enter your password"
+                class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+            class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition duration-300">Login</button>
+
+        <!-- Forgot Password Link -->
+        <p class="mt-4 text-center text-sm text-gray-500">
+            Forgot password? <a href="#" class="text-blue-500 hover:underline">Click here</a>
+        </p>
     </form>
 </body>
 

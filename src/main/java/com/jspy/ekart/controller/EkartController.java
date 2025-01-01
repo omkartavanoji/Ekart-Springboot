@@ -159,6 +159,13 @@ public class EkartController {
 			return "redirect:/customer/login";
 		}
 	}
+	
+	@GetMapping("/customer/logout")
+	public String customerLogout(HttpSession session){
+		session.removeAttribute("customerdto");
+		session.setAttribute("success", "Customer Logged Out Successfully");
+		return "redirect:/";
+	}
 
 	@GetMapping("/admin/login")
 	public String adminLogin() {

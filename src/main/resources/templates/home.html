@@ -6,7 +6,27 @@
     <title>EKART - Home</title>
     <!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+    <style>
+        .toast {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: fadeInOut 4s ease-out forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style></head></head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <!-- Navbar -->
     <nav class="bg-white shadow-md px-6 py-4">
@@ -40,13 +60,27 @@
         </div>
     </nav>
 
+    <!-- Toast Messages -->
+    <div th:if="${session.success}" class="toast bg-green-100 border-l-4 border-green-500">
+        <span class="text-green-700" th:text="${session.success}"></span>
+        <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+    <div th:if="${session.failure}" class="toast bg-red-100 border-l-4 border-red-500">
+        <span class="text-red-700" th:text="${session.failure}"></span>
+        <button onclick="this.parentElement.remove()" class="text-red-700 hover:text-red-900">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
+    <th:block th:text="${@messageRemover.remove()}"></th:block>
+
     <!-- Content -->
     <div class="flex flex-col items-center justify-center flex-grow text-center px-6">
-        <div>
-            <h3 class="text-green-500 mb-2 text-lg font-semibold" th:text="${session.success}"></h3>
-            <h3 class="text-red-500 mb-2 text-lg font-semibold" th:text="${session.failure}"></h3>
-            <th:block th:text="${@messageRemover.remove()}"></th:block>
-        </div>
         <h1 class="text-4xl font-bold text-gray-800 mt-10">Welcome to EKART</h1>
         <p class="text-gray-600 mt-4 text-lg">
             Your one-stop solution for all vendor needs. Register or log in to get started.
@@ -66,6 +100,13 @@
 
         menuBtn.addEventListener('click', () => {
             dropdownMenu.classList.toggle('hidden');
+        });
+
+        // Auto remove toast messages after 4 seconds
+        document.querySelectorAll('.toast').forEach(toast => {
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
         });
     </script>
 </body>
