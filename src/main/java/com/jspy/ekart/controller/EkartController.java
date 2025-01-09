@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jspy.ekart.controller.helper.CloudinaryImage;
 import com.jspy.ekart.dto.Customerdto;
 import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.dto.Vendordto;
@@ -21,7 +22,6 @@ import com.jspy.ekart.service.CustomerService;
 import com.jspy.ekart.service.VendorService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import lombok.With;
 
 @Controller
 public class EkartController {
@@ -33,6 +33,9 @@ public class EkartController {
 
 	@Autowired
 	ProductRepository productRepository;
+
+	@Autowired
+	CloudinaryImage cloudinaryImage;
 
 	@Value("${admin.email}")
 	String adminEmail;
@@ -46,23 +49,23 @@ public class EkartController {
 
 	@GetMapping("/vendor/register")
 	public String loadVendorRegistration(ModelMap modelMap, Vendordto vendordto) {
-		return vendorService.vendorRegistration(modelMap, vendordto);
+		return vendorService.loadVendorRegistration(modelMap, vendordto);
 	}
 
 	@PostMapping("/vendor/register")
 	public String vendorRegistration(@Valid Vendordto vendordto, BindingResult bindingResult, HttpSession session) {
-		return vendorService.registeration(vendordto, bindingResult, session);
+		return vendorService.vendorRegisteration(vendordto, bindingResult, session);
 	}
 
 	@GetMapping("/vendor/otp/{id}")
-	public String loadOtpPage(@PathVariable int id, ModelMap modelMap) {
+	public String loadVendorOtpPage(@PathVariable int id, ModelMap modelMap) {
 		modelMap.put("id", id);
 		return "vendor-otp.html";
 	}
 
 	@PostMapping("/vendor/otp")
-	public String verifyOtp(@RequestParam int id, @RequestParam int otp, HttpSession session) {
-		return vendorService.verifyOtp(id, otp, session);
+	public String vendorVerifyOtp(@RequestParam int id, @RequestParam int otp, HttpSession session) {
+		return vendorService.vendorVerifyOtp(id, otp, session);
 	}
 
 	@GetMapping("/vendor/login")
@@ -86,7 +89,7 @@ public class EkartController {
 	}
 
 	@GetMapping("/add/product")
-	public String loadAddProductPage(HttpSession session) {
+	public String loadVendorAddProductPage(HttpSession session) {
 		if (session.getAttribute("vendordto") != null) {
 			return "add-product.html";
 		} else {
@@ -96,8 +99,8 @@ public class EkartController {
 	}
 
 	@PostMapping("/add/product")
-	public String addProduct(Productdto productdto, HttpSession session) throws IOException {
-		return vendorService.addProduct(productdto, session);
+	public String vendorAddProduct(Productdto productdto, HttpSession session) throws IOException {
+		return vendorService.vendorAddProduct(productdto, session);
 	}
 
 	@GetMapping("/vendor/manageproduct")
@@ -106,8 +109,8 @@ public class EkartController {
 	}
 
 	@GetMapping("/delete/{productId}")
-	public String deleteVendorProduct(@PathVariable("productId") int id, HttpSession session, ModelMap map) {
-		return vendorService.deleteVendorProduct(id, session, map);
+	public String vendorDeleteProduct(@PathVariable("productId") int id, HttpSession session) {
+		return vendorService.vendorDeleteProduct(id, session);
 	}
 
 	@GetMapping("/vendor/logout")
@@ -136,7 +139,7 @@ public class EkartController {
 	}
 
 	@PostMapping("/customer/otp")
-	public String CustomerVerifyOtp(@RequestParam int otp, @RequestParam int id, HttpSession session) {
+	public String customerVerifyOtp(@RequestParam int otp, @RequestParam int id, HttpSession session) {
 		return customerService.verifyOtp(otp, id, session);
 	}
 
@@ -159,9 +162,9 @@ public class EkartController {
 			return "redirect:/customer/login";
 		}
 	}
-	
+
 	@GetMapping("/customer/logout")
-	public String customerLogout(HttpSession session){
+	public String customerLogout(HttpSession session) {
 		session.removeAttribute("customerdto");
 		session.setAttribute("success", "Customer Logged Out Successfully");
 		return "redirect:/";
@@ -238,6 +241,17 @@ public class EkartController {
 	public String adminLogout(HttpSession session) {
 		session.removeAttribute("admin");
 		session.setAttribute("success", "ADMIN LOGGED OUT SUCCESSFULLY");
-       return "redirect:/";
+		return "redirect:/";
+	}
+
+	@GetMapping("/update/{product_id}")
+	public String loadVendorUpdateProductPage(@PathVariable("product_id") int id, HttpSession session,
+			ModelMap modelMap) {
+		return vendorService.loadVendorUpdateProductPage(id, session, modelMap);
+	}
+
+	@PostMapping("/update/product")
+	public String vendorUpdateProduct(Productdto productdto, HttpSession session) throws IOException {
+		return vendorService.vendorUpdateProduct(productdto, session);
 	}
 }

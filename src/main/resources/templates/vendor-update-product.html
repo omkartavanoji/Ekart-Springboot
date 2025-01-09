@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"><head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+    <form action="/update/product" method="post" enctype="multipart/form-data" th:object="${productdto}">
+        <input type="hidden" name="id" th:value="${productdto.id}">
+        
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required  th:value="*{productName}"><br><br>
+        
+        <label for="productPrice">Product Price:</label>
+        <input type="text" id="productPrice" name="productPrice" th:value="*{productPrice}"  ><br><br>
+        
+        <label for="productStock">Product Stock:</label>
+        <input type="text" id="productStock" name="productStock" th:value="*{productStock}" ><br><br>
+        
+        <label for="productDescription">Product Description:</label>
+        <input type="text" id="productDescription" name="productDescription" th:value="*{productDescription}" ><br><br>
+        
+        <label for="productCategory">Product Category:</label>
+        <input type="text" id="productCategory" name="productCategory" th:value="*{productCategory}" ><br><br>
+        
+        <label for="productImage">Product Image:</label>
+        <input type="file" id="productImage" name="productImage" ><br><br>
+        <label>Choose File</label>
+        <img height="100px" width="100px" th:src="*{productImageLink}">
+        
+        <button type="submit">UPDATE PRODUCT</button>
+    </form>
+</body>
+</html>

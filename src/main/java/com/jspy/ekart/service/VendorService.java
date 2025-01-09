@@ -34,12 +34,12 @@ public class VendorService {
 	@Autowired
 	EmailSender_OTP emailSender_OTP;
 
-	public String vendorRegistration(ModelMap modelMap, Vendordto vendordto) {
+	public String loadVendorRegistration(ModelMap modelMap, Vendordto vendordto) {
 		modelMap.put("vendordto", vendordto);
 		return "vendor-register.html";
 	}
 
-	public String registeration(@Valid Vendordto vendordto, BindingResult bindingResult, HttpSession session) {
+	public String vendorRegisteration(@Valid Vendordto vendordto, BindingResult bindingResult, HttpSession session) {
 		if (!vendordto.getPassword().equals(vendordto.getConfirmPassword())) {
 			bindingResult.rejectValue("confirmPassword", " error.confirmPassword",
 					"*Password and ConfirmPassword do not match");
@@ -68,7 +68,7 @@ public class VendorService {
 		}
 	}
 
-	public String verifyOtp(int id, int otp, HttpSession session) {
+	public String vendorVerifyOtp(int id, int otp, HttpSession session) {
 		Vendordto vendordto = vendorRepository.findById(id).orElseThrow();
 		if (vendordto.getOtp() == otp) {
 			vendordto.setVerified(true);
@@ -110,7 +110,7 @@ public class VendorService {
 		}
 	}
 
-	public String addProduct(Productdto productdto, HttpSession session) throws IOException {
+	public String vendorAddProduct(Productdto productdto, HttpSession session) throws IOException {
 		if (session.getAttribute("vendordto") != null) {
 			Vendordto vendordto = (Vendordto) session.getAttribute("vendordto");
 			productdto.setVendordto(vendordto);
@@ -122,7 +122,7 @@ public class VendorService {
 			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");
 			return "redirect:/vendor/login";
 		}
-	} 
+	}
 
 	public String loadVendorProductsPage(HttpSession session, ModelMap map) {
 		if (session.getAttribute("vendordto") != null) {
@@ -141,10 +141,35 @@ public class VendorService {
 		}
 	}
 
-	public String deleteVendorProduct(int id, HttpSession session, ModelMap map) {
+	public String vendorDeleteProduct(int id, HttpSession session) {
 		if (session.getAttribute("vendordto") != null) {
 			productRepository.deleteById(id);
 			session.setAttribute("success", "PRODUCT WITH ID " + id + " DELETED SUCCESSFULLY");
+			return "redirect:/vendor/manageproduct";
+		} else {
+			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");
+			return "redirect:/vendor/login";
+		}
+	}
+
+	public String loadVendorUpdateProductPage(int id, HttpSession session, ModelMap modelMap) {
+		if (session.getAttribute("vendordto") != null) {
+			Productdto productdto = productRepository.findById(id).get();
+			modelMap.put("productdto", productdto);
+			return "vendor-update-product.html";
+		} else {
+			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");
+			return "redirect:/vendor/login";
+		}
+	}
+
+	public String vendorUpdateProduct(Productdto productdto, HttpSession session) throws IOException {
+		if (session.getAttribute("vendordto") != null) {
+			Vendordto vendordto = (Vendordto) session.getAttribute("vendordto");
+			productdto.setProductImageLink(cloudinaryImage.uploadFile(productdto.getProductImage()));
+			productdto.setVendordto(vendordto);
+			productRepository.save(productdto);
+			session.setAttribute("success", "Product Update With id " + productdto.getId());
 			return "redirect:/vendor/manageproduct";
 		} else {
 			session.setAttribute("failure", "INVALID SESSION, FIRST LOGIN");

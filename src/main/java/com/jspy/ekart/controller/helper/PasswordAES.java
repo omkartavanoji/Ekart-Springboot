@@ -1,4 +1,5 @@
 package com.jspy.ekart.controller.helper;
+
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -15,11 +16,13 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
 public class PasswordAES {
 	private static final String SECRET_KEY = "123456789";
 	private static final String SALTVALUE = "abcdefg";
+
 	public static String encrypt(String strToEncrypt) {
-		try {
+		try { 
 			byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 			IvParameterSpec ivspec = new IvParameterSpec(iv);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -35,9 +38,10 @@ public class PasswordAES {
 			System.out.println("Error occurred during encryption: " + e.toString());
 		}
 		return null;
-	}
-	public static String decrypt(String strToDecrypt) {
-		try {
+	} 
+
+	public static String decrypt(String strToDecrypt) { 
+		try {  
 			byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 			IvParameterSpec ivspec = new IvParameterSpec(iv);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -53,5 +57,5 @@ public class PasswordAES {
 			System.out.println("Error occurred during decryption: " + e.toString());
 		}
 		return null;
-	}
+	} 
 }

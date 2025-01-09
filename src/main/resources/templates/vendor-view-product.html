@@ -47,7 +47,7 @@
 
                 <!-- Action Buttons -->
                 <div class="px-4 pb-4 flex justify-between">
-                    <a href="#" class="bg-gradient-to-r from-green-400 to-green-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-green-500 hover:to-green-700 transition duration-300">
+                    <a th:href="'/update/'+${product.id}" class="bg-gradient-to-r from-green-400 to-green-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-green-500 hover:to-green-700 transition duration-300">
                         UPDATE
                     </a>
                     <a th:href="'/delete/'+${product.id}" class="bg-gradient-to-r from-red-400 to-red-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-red-500 hover:to-red-700 transition duration-300">
