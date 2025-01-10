@@ -22,6 +22,7 @@ import com.jspy.ekart.dto.Items;
 import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.dto.Vendordto;
 import com.jspy.ekart.repository.CustomerRepository;
+import com.jspy.ekart.repository.ItemRepository;
 import com.jspy.ekart.repository.ProductRepository;
 import com.jspy.ekart.service.CustomerService;
 import com.jspy.ekart.service.VendorService;
@@ -44,6 +45,9 @@ public class EkartController {
 
 	@Autowired
 	CustomerRepository customerRepository;
+
+	@Autowired
+	ItemRepository itemRepository;
 
 	@Value("${admin.email}")
 	String adminEmail;
@@ -290,7 +294,61 @@ public class EkartController {
 
 	@GetMapping("/customer/add-to-cart/{id}")
 	public String customerAddToCart(@PathVariable int id, HttpSession session) {
-		return customerService.customerAddtoCart(id,session);
-
+		return customerService.customerAddtoCart(id, session);
 	}
+
+	@GetMapping("/increase/{id}")
+	public String increase(@PathVariable int id, HttpSession session) {
+		if (session.getAttribute("customerdto") != null) {
+			Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+			Items item = itemRepository.findById(id).get();
+			Productdto productdto = productRepository.findByProductNameLike(item.getProductName()).get(0);
+			if (productdto.getProductStock() == 0) {
+				session.setAttribute("failure", "Sorry! Product Out of Stock");
+				return "redirect:/customer/cart";
+			} else {
+				item.setQuantity(item.getQuantity() + 1);
+				item.setProductPrice(item.getProductPrice() + productdto.getProductPrice());
+				itemRepository.save(item);
+				productdto.setProductStock(productdto.getProductStock() - 1);
+				productRepository.save(productdto);
+				session.setAttribute("success", "Product Added to Cart");
+				session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
+				return "redirect:/customer/cart";
+			}
+		} else {
+			session.setAttribute("failure", "Invalid Session, First Login");
+			return "redirect:/customer/login";
+		}
+	}
+
+	@GetMapping("/decrease/{id}")
+	public String decrease(@PathVariable int id, HttpSession session) {
+		if (session.getAttribute("customerdto") != null) {
+			Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+			Items item = itemRepository.findById(id).get();
+			Productdto productdto = productRepository.findByProductNameLike(item.getProductName()).get(0);
+			if (item.getQuantity() > 1) {
+				item.setQuantity(item.getQuantity() - 1);
+				item.setProductPrice(item.getProductPrice() - productdto.getProductPrice());
+				itemRepository.save(item);
+				productdto.setProductStock(productdto.getProductStock() + 1);
+				productRepository.save(productdto);
+				session.setAttribute("success", "Product Quantity Reduced from Cart Success");
+				session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
+				return "redirect:/customer/cart";
+			} else {
+				customerdto.getCart().getItems().remove(item);
+				customerRepository.save(customerdto);
+				session.setAttribute("failure",  "Product Removed from Cart");
+				session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
+				return "redirect:/customer/cart";
+			}
+		} else {
+			session.setAttribute("failure", "Invalid Session, First Login");
+			return "redirect:/customer/login";
+		}
+	}
+	
+	
 }

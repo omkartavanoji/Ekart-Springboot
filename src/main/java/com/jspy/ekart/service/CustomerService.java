@@ -139,15 +139,14 @@ public class CustomerService {
 			Cart cart = customerdto.getCart();
 			if (cart == null) {
 				session.setAttribute("failure", "Nothing Is Present Inside Cart");
-				System.out.println("1");
 				return "redirect:/customer/home";
 			} else {
 				List<Items> items = cart.getItems();
 				if (items.isEmpty()) {
-					session.setAttribute("failure", "Nothing Is Present Inside Cart");
-					System.out.println("11");
+					session.setAttribute("failure", "Cart Is Empty");
 					return "redirect:/customer/home";
 				} else {
+					modelMap.put("totalprice", items.stream().mapToDouble(i->i.getProductPrice()).sum());
 					modelMap.put("items", items);
 					return "customer-cart.html";
 				}
@@ -183,7 +182,6 @@ public class CustomerService {
 					session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
 					return "redirect:/customer/home";
 				}
-
 			} else {
 				session.setAttribute("failure", "Sorry! Product Out of Stock");
 				return "redirect:/customer/home";
