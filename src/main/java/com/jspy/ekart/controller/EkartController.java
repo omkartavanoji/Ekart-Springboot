@@ -3,6 +3,7 @@ package com.jspy.ekart.controller;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jspy.ekart.controller.helper.CloudinaryImage;
+import com.jspy.ekart.dto.Cart;
 import com.jspy.ekart.dto.Customerdto;
+import com.jspy.ekart.dto.Items;
 import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.dto.Vendordto;
+import com.jspy.ekart.repository.CustomerRepository;
 import com.jspy.ekart.repository.ProductRepository;
 import com.jspy.ekart.service.CustomerService;
 import com.jspy.ekart.service.VendorService;
@@ -37,6 +41,9 @@ public class EkartController {
 
 	@Autowired
 	CloudinaryImage cloudinaryImage;
+
+	@Autowired
+	CustomerRepository customerRepository;
 
 	@Value("${admin.email}")
 	String adminEmail;
@@ -221,7 +228,7 @@ public class EkartController {
 	}
 
 	@GetMapping("/change/{id}")
-	public String approveProducts(@PathVariable int id, HttpSession session) {
+	public String approveProducts(@PathVariable("id") int id, HttpSession session) {
 		if (session.getAttribute("admin") != null) {
 			Productdto productdto = productRepository.findById(id).orElseThrow();
 			if (productdto.isApproved()) {
@@ -258,7 +265,7 @@ public class EkartController {
 
 	@GetMapping("/customer/product")
 	public String loadCustomerViewProductsPage(HttpSession session, ModelMap modelMap) {
-		return customerService.loadCustomerViewProductsPage(session,modelMap);
+		return customerService.loadCustomerViewProductsPage(session, modelMap);
 	}
 
 	@GetMapping("/customer/search")
@@ -273,7 +280,17 @@ public class EkartController {
 
 	@PostMapping("/customer/search")
 	public String customerSearch(@RequestParam String search, HttpSession session, ModelMap modelMap) {
-		return customerService.customerSearch(search,session,modelMap);
+		return customerService.customerSearch(search, session, modelMap);
 	}
 
+	@GetMapping("/customer/cart")
+	public String loadCustomerCartPage(HttpSession session, ModelMap modelMap) {
+		return customerService.loadCustomerCartPage(session, modelMap);
+	}
+
+	@GetMapping("/customer/add-to-cart/{id}")
+	public String customerAddToCart(@PathVariable int id, HttpSession session) {
+		return customerService.customerAddtoCart(id,session);
+
+	}
 }

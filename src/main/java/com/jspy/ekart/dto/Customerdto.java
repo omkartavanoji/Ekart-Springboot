@@ -1,9 +1,12 @@
 package com.jspy.ekart.dto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -12,6 +15,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 @Entity
 @Data
 public class Customerdto {
@@ -33,4 +37,7 @@ public class Customerdto {
 	private String mobile;
 	private int otp;
 	private boolean verified;
+
+	@OneToOne(cascade  = CascadeType.ALL)
+	private Cart cart = new Cart();
 }

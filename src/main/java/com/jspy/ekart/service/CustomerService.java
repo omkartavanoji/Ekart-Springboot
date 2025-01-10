@@ -3,13 +3,17 @@ package com.jspy.ekart.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import com.jspy.ekart.dto.Cart;
 import com.jspy.ekart.dto.Customerdto;
+import com.jspy.ekart.dto.Items;
 import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.repository.CustomerRepository;
 import com.jspy.ekart.repository.ProductRepository;
@@ -120,8 +124,6 @@ public class CustomerService {
 			productdto.addAll(list);
 			productdto.addAll(list1);
 			productdto.addAll(list2);
-			System.out.println(productdto);
-			System.out.println(productdto.isEmpty());
 			modelMap.put("productdto", productdto.isEmpty() ? null : productdto);
 			modelMap.put("search", search);
 			return "search.html";
@@ -130,4 +132,66 @@ public class CustomerService {
 			return "redirect:/customer/login";
 		}
 	}
+
+	public String loadCustomerCartPage(HttpSession session, ModelMap modelMap) {
+		if (session.getAttribute("customerdto") != null) {
+			Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+			Cart cart = customerdto.getCart();
+			if (cart == null) {
+				session.setAttribute("failure", "Nothing Is Present Inside Cart");
+				System.out.println("1");
+				return "redirect:/customer/home";
+			} else {
+				List<Items> items = cart.getItems();
+				if (items.isEmpty()) {
+					session.setAttribute("failure", "Nothing Is Present Inside Cart");
+					System.out.println("11");
+					return "redirect:/customer/home";
+				} else {
+					modelMap.put("items", items);
+					return "customer-cart.html";
+				}
+			}
+		} else {
+			session.setAttribute("failure", "Invalid Session, First login");
+			return "redirect:/customer/login";
+		}
+	}
+
+	public String customerAddtoCart(int id, HttpSession session) {
+		if (session.getAttribute("customerdto") != null) {
+			Productdto productdto = productRepository.findById(id).get();
+			if (productdto.getProductStock() > 0) {
+				Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+				Cart cart = customerdto.getCart();
+				List<Items> items = cart.getItems();
+				if (items.stream().map(x -> x.getProductName()).collect(Collectors.toList())
+						.contains(productdto.getProductName())) {
+					session.setAttribute("failure", "Product Already Exists in Cart");
+					return "redirect:/customer/home";
+				} else {
+					Items item = new Items();
+					item.setProductName(productdto.getProductName());
+					item.setProductCategory(productdto.getProductCategory());
+					item.setProductDescription(productdto.getProductDescription());
+					item.setProductPrice(productdto.getProductPrice());
+					item.setProductImageLink(productdto.getProductImageLink());
+					item.setQuantity(1);
+					items.add(item);
+					customerRepository.save(customerdto);
+					session.setAttribute("success", "Product Added to Cart Success");
+					session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
+					return "redirect:/customer/home";
+				}
+
+			} else {
+				session.setAttribute("failure", "Sorry! Product Out of Stock");
+				return "redirect:/customer/home";
+			}
+		} else {
+			session.setAttribute("success", "Invalid Session, First Login");
+			return "redirect:/customer/home";
+		}
+	}
+
 }

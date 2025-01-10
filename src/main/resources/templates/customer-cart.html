@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Products View</title>
+    <title>CART</title>
     <!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gradient-to-r from-blue-50 to-purple-50 min-h-screen">
-    <!-- Header -->
     <header class="bg-white shadow-md py-4 px-6">
         <div class="flex justify-between items-center">
             <!-- Back Button -->
             <a href="/customer/home" class="text-blue-500 hover:text-blue-700 font-semibold text-lg">
-                Back 
+                Back
             </a>
-            <div class="text-2xl font-bold text-blue-600">Search Products</div>
+            <div class="text-2xl font-bold text-blue-600">Cart Products</div>
             <!-- Empty placeholder for balance -->
             <div></div>
         </div>
@@ -23,39 +24,43 @@
 
     <!-- Main Content -->
     <div class="p-6">
-        <!-- Search Form -->
-        <form action="/customer/search" method="post" class="mb-6 flex justify-center">
-            <input type="text" name="search" placeholder="Search Products" class="px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-md">
-            <button class="bg-blue-500 text-white px-6 py-2 rounded-r-lg hover:bg-blue-600 transition duration-300">Search</button>
-        </form>
-        
+        <!-- Success and Failure Messages -->
+        <div class="text-center">
+            <h3 class="text-green-500 font-semibold text-lg mb-4" th:text="${session.success}"></h3>
+            <h3 class="text-red-500 font-semibold text-lg mb-4" th:text="${session.failure}"></h3>
+            <th:block th:text="${@messageRemover.remove()}"></th:block>
+        </div>
+
         <!-- Product Cards -->
-        <div th:if="${productdto}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div th:each="product : ${productdto}" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div th:each="product : ${items}"
+                class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
                 <!-- Product Image -->
                 <img th:src="${product.productImageLink}" alt="Product Image" class="h-72 w-full object-contain">
-                
+
                 <!-- Product Details -->
                 <div class="p-4">
                     <h2 class="font-bold text-lg text-gray-800 mb-2" th:text="${product.productName}"></h2>
                     <p class="text-sm text-gray-600 mb-1" th:text="'Description: ' + ${product.productDescription}"></p>
                     <p class="text-sm text-gray-600 mb-1" th:text="'Category: ' + ${product.productCategory}"></p>
-                    <p class="text-sm text-gray-600 mb-1" th:text="'Stock: ' + ${product.productStock}"></p>
-                    <p class="text-lg font-semibold text-blue-500 mb-2" th:text="'Price: ₹' + ${product.productPrice}"></p>
+                    <p class="text-lg font-semibold text-blue-500 mb-2" th:text="'Price: ₹' + ${product.productPrice}">
+                    </p>
+                    <div class="flex items-center justify-center space-x-4 mb-2">
+                        <button class="text-blue-500 font-bold text-xl hover:text-blue-700">-</button>
+                        <p class="text-lg font-semibold text-blue-500" th:text="'Quantity: '+${product.quantity}"></p>
+                        <button class="text-blue-500 font-bold text-xl hover:text-blue-700">+</button>
+                    </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Buy Button -->
                 <div class="px-4 pb-4">
-                    <a th:href="'/add-to-cart/'+${product.id}" class="block w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white text-center text-sm font-semibold py-2 px-4 rounded shadow hover:from-blue-500 hover:to-blue-700 transition duration-300">
-                        ADD TO CART
+                    <a th:href="'/buy/'+${product.id}"
+                        class="block w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white text-center text-sm font-semibold py-2 px-4 rounded shadow hover:from-blue-500 hover:to-blue-700 transition duration-300">
+                        BUY
                     </a>
                 </div>
             </div>
         </div>
-
-        <!-- No Products Found -->
-        <div th:if="${productdto}" class="text-center text-gray-600 text-lg mt-8">
-            No Products Found
     </div>
 
     <!-- Footer -->
@@ -63,5 +68,5 @@
         © 2024 EKART. All Rights Reserved.
     </footer>
 </body>
-</html>
+
 </html>
