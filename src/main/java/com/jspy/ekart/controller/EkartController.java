@@ -1,6 +1,7 @@
 package com.jspy.ekart.controller;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,4 +255,25 @@ public class EkartController {
 	public String vendorUpdateProduct(Productdto productdto, HttpSession session) throws IOException {
 		return vendorService.vendorUpdateProduct(productdto, session);
 	}
+
+	@GetMapping("/customer/product")
+	public String loadCustomerViewProductsPage(HttpSession session, ModelMap modelMap) {
+		return customerService.loadCustomerViewProductsPage(session,modelMap);
+	}
+
+	@GetMapping("/customer/search")
+	public String customerSearchProducts(HttpSession session) {
+		if (session.getAttribute("customerdto") != null) {
+			return "search.html";
+		} else {
+			session.setAttribute("failure", "Invalid Session, First Login");
+			return "redirect:/customer/login";
+		}
+	}
+
+	@PostMapping("/customer/search")
+	public String customerSearch(@RequestParam String search, HttpSession session, ModelMap modelMap) {
+		return customerService.customerSearch(search,session,modelMap);
+	}
+
 }

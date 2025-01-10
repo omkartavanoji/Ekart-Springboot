@@ -77,15 +77,41 @@
     <!-- Main Content -->
     <div class="flex flex-col items-center justify-center flex-grow text-center px-6 py-10">
         <!-- Welcome Message -->
-        <h1 class="text-4xl font-bold text-gray-800 mb-8">Welcome to Customer Home Page</h1>
+        <h1 class="text-4xl font-bold text-gray-800 mb-10">Welcome to Customer Home Page</h1>
 
-        <!-- Logout Button with Icon -->
-        <a href="/customer/logout">
-            <button type="button"
-                class="flex items-center bg-red-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
-                <i class="fas fa-sign-out-alt mr-2 text-lg"></i> Log Out
-            </button>
-        </a>
+        <!-- Buttons Horizontally Aligned with Smaller Size -->
+        <div class="flex space-x-4">
+            <a href="/customer/product">
+                <button type="submit"
+                    class="flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-shopping-bag mr-2 text-lg"></i> View Products
+                </button>
+            </a>
+            <a href="/customer/cart">
+                <button type="submit"
+                    class="flex items-center bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                    <i class="fas fa-shopping-cart mr-2 text-lg"></i>View Cart
+                </button>
+            </a>
+            <a href="/customer/search">
+                <button type="submit"
+                    class="flex items-center bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                    <i class="fas fa-search mr-2 text-lg"></i>Search Products
+                </button>
+            </a>
+            <a href="/customer/previousorders">
+                <button type="submit"
+                    class="flex items-center bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                    <i class="fas fa-history mr-2 text-lg"></i>View Previous Orders
+                </button>
+            </a>
+            <a href="/customer/logout">
+                <button type="submit"
+                    class="flex items-center bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
+                    <i class="fas fa-sign-out-alt mr-2 text-lg"></i> Logout
+                </button>
+            </a>
+        </div>
     </div>
 
     <!-- Footer -->

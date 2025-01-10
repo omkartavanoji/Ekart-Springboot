@@ -127,12 +127,12 @@ public class VendorService {
 	public String loadVendorProductsPage(HttpSession session, ModelMap map) {
 		if (session.getAttribute("vendordto") != null) {
 			Vendordto vendordto = (Vendordto) session.getAttribute("vendordto");
-			List<Productdto> product = productRepository.findByVendordto(vendordto);
-			if (product.isEmpty()) {
+			List<Productdto> productdto = productRepository.findByVendordto(vendordto);
+			if (productdto.isEmpty()) {
 				session.setAttribute("failure", "NO PRODUCTS FOUND");
 				return "redirect:/vendor/home";
 			} else {
-				map.put("products", product);
+				map.put("productdto", productdto);
 				return "vendor-view-product.html";
 			}
 		} else {

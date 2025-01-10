@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendor Products View</title>
+    <title>Customer Products View</title>
     <!-- Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
@@ -12,10 +12,10 @@
     <header class="bg-white shadow-md py-4 px-6">
         <div class="flex justify-between items-center">
             <!-- Back Button -->
-            <a href="/vendor/home" class="text-blue-500 hover:text-blue-700 font-semibold text-lg">
+            <a href="/customer/home" class="text-blue-500 hover:text-blue-700 font-semibold text-lg">
                 Back 
             </a>
-            <div class="text-2xl font-bold text-blue-600">Your Products</div>
+            <div class="text-2xl font-bold text-blue-600">Search Products</div>
             <!-- Empty placeholder for balance -->
             <div></div>
         </div>
@@ -23,15 +23,14 @@
 
     <!-- Main Content -->
     <div class="p-6">
-        <!-- Success and Failure Messages -->
-        <div class="text-center">
-            <h3 class="text-green-500 font-semibold text-lg mb-4" th:text="${session.success}"></h3>
-            <h3 class="text-red-500 font-semibold text-lg mb-4" th:text="${session.failure}"></h3>
-            <th:block th:text="${@messageRemover.remove()}"></th:block>
-        </div>
-
+        <!-- Search Form -->
+        <form action="/customer/search" method="post" class="mb-6 flex justify-center">
+            <input type="text" name="search" placeholder="Search Products" class="px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-md">
+            <button class="bg-blue-500 text-white px-6 py-2 rounded-r-lg hover:bg-blue-600 transition duration-300">Search</button>
+        </form>
+        
         <!-- Product Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div th:if="${productdto}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <div th:each="product : ${productdto}" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
                 <!-- Product Image -->
                 <img th:src="${product.productImageLink}" alt="Product Image" class="h-72 w-full object-contain">
@@ -46,16 +45,17 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="px-4 pb-4 flex justify-between">
-                    <a th:href="'/update/'+${product.id}" class="bg-gradient-to-r from-green-400 to-green-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-green-500 hover:to-green-700 transition duration-300">
-                        UPDATE
-                    </a>
-                    <a th:href="'/delete/'+${product.id}" class="bg-gradient-to-r from-red-400 to-red-600 text-white text-sm font-semibold py-2 px-4 rounded shadow hover:from-red-500 hover:to-red-700 transition duration-300">
-                        DELETE
+                <div class="px-4 pb-4">
+                    <a th:href="'/add-to-cart/'+${product.id}" class="block w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white text-center text-sm font-semibold py-2 px-4 rounded shadow hover:from-blue-500 hover:to-blue-700 transition duration-300">
+                        ADD TO CART
                     </a>
                 </div>
             </div>
         </div>
+
+        <!-- No Products Found -->
+        <div th:if="${productdto}" class="text-center text-gray-600 text-lg mt-8">
+            No Products Found
     </div>
 
     <!-- Footer -->
@@ -63,4 +63,5 @@
         © 2024 EKART. All Rights Reserved.
     </footer>
 </body>
+</html>
 </html>

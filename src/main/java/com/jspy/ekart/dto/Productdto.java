@@ -23,7 +23,7 @@ public class Productdto {
 	private String productDescription;
 	private String productCategory;
 	private String productImageLink;
-	private boolean Approved;
+	private boolean approved;
 	@Transient
 	private MultipartFile productImage;
 	@ManyToOne

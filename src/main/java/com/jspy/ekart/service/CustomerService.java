@@ -1,19 +1,28 @@
 package com.jspy.ekart.service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
 import com.jspy.ekart.dto.Customerdto;
+import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.repository.CustomerRepository;
+import com.jspy.ekart.repository.ProductRepository;
+
 import jakarta.servlet.http.HttpSession;
 
 @Component
 public class CustomerService {
 	@Autowired
 	CustomerRepository customerRepository;
+
+	@Autowired
+	ProductRepository productRepository;
 
 	public String customerRegistration(Customerdto customerdto, BindingResult bindingResult, HttpSession session) {
 		if (!customerdto.getPassword().equals(customerdto.getConfirmPassword())) {
@@ -78,6 +87,47 @@ public class CustomerService {
 				session.setAttribute("failure", "Incorrect Password");
 				return "redirect:/customer/login";
 			}
+		}
+	}
+
+	public String loadCustomerViewProductsPage(HttpSession session, ModelMap modelMap) {
+		if (session.getAttribute("customerdto") != null) {
+			List<Productdto> productdto = productRepository.findByApprovedTrue();
+			if (productdto.isEmpty()) {
+				session.setAttribute("failure", "No Products Available");
+				return "redirect:/customer/home";
+			} else {
+				modelMap.put("productdto", productdto);
+				return "customer-view-products.html";
+			}
+		} else {
+			session.setAttribute("failure", "Invalid Session, Please Login First");
+			return "redirect:/customer/login";
+		}
+	}
+
+	public String customerSearch(String search, HttpSession session, ModelMap modelMap) {
+		if (session.getAttribute("customerdto") != null) {
+			if (search.isEmpty()) {
+				modelMap.put("search", null);
+				return "search.html";
+			}
+			String toSearch = "%" + search + "%";
+			List<Productdto> list = productRepository.findByApprovedTrueAndProductNameLike(toSearch);
+			List<Productdto> list1 = productRepository.findByApprovedTrueAndProductDescriptionLike(toSearch);
+			List<Productdto> list2 = productRepository.findByApprovedTrueAndProductCategoryLike(toSearch);
+			HashSet<Productdto> productdto = new HashSet<>();
+			productdto.addAll(list);
+			productdto.addAll(list1);
+			productdto.addAll(list2);
+			System.out.println(productdto);
+			System.out.println(productdto.isEmpty());
+			modelMap.put("productdto", productdto.isEmpty() ? null : productdto);
+			modelMap.put("search", search);
+			return "search.html";
+		} else {
+			session.setAttribute("failure", "Invalid Session, First login");
+			return "redirect:/customer/login";
 		}
 	}
 }
