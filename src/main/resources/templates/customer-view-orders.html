@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>My Orders</title>
+	<!-- Tailwind CSS CDN -->
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-to-r from-blue-50 to-purple-50 min-h-screen">
+	<!-- Header -->
+	<header class="bg-white shadow-md py-4 px-6">
+		<div class="flex justify-between items-center">
+			<!-- Back Button -->
+			<a href="/customer/home" class="text-blue-500 hover:text-blue-700 font-semibold text-lg">
+				Back
+			</a>
+			<div class="text-2xl font-bold text-blue-600">My Orders</div>
+			<!-- Empty placeholder for balance -->
+			<div></div>
+		</div>
+	</header>
+
+	<!-- Main Content -->
+	<div class="p-6">
+		<div class="space-y-6">
+			<div th:each="order:${orders}" class="bg-white rounded-lg shadow-md overflow-hidden">
+				<div class="bg-gray-50 p-4">
+					<div class="flex flex-col md:flex-row justify-between items-center">
+						<div>
+							<h5 class="font-semibold">Order ID: <span th:text="${order.razorpay_order_id}"></span></h5>
+							<p class="text-gray-600">Payment ID: <span th:text="${order.razorpay_payment_id}"></span>
+							</p>
+						</div>
+						<div class="mt-2 md:mt-0">
+							<p class="text-xl font-bold text-blue-600">Total: ₹<span
+									th:text="${order.totalPrice}"></span></p>
+						</div>
+					</div>
+				</div>
+				<div class="p-4">
+					<div class="flex flex-col md:flex-row justify-between mb-4">
+						<p class="text-gray-600">Ordered Date: <span th:text="${order.orderDate}"></span></p>
+					</div>
+					<h6 class="font-semibold mb-4">Order Items:</h6>
+					<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+						<div th:each="item:${order.items}"
+							class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+							<img class="h-48 w-full object-contain" th:src="${item.productImageLink}"
+								alt="Product Image">
+							<div class="p-4">
+								<h5 class="font-bold text-lg text-gray-800 mb-2" th:text="${item.productName}"></h5>
+								<p class="text-sm text-gray-600 mb-1">Price: ₹<span
+										th:text="${item.productPrice}"></span></p>
+								<p class="text-sm text-gray-600 mb-1">Quantity: <span th:text="${item.quantity}"></span>
+								</p>
+								<p class="text-sm text-gray-600 mb-1">Category: <span
+										th:text="${item.productCategory}"></span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="bg-gray-200 text-center py-4 text-sm text-gray-600 mt-8">
+		© 2024 EKART. All Rights Reserved.
+	</footer>
+</body>
+
+</html>

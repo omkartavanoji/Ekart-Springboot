@@ -1,9 +1,7 @@
 package com.jspy.ekart.controller;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,20 +12,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.jspy.ekart.controller.helper.CloudinaryImage;
-import com.jspy.ekart.dto.Cart;
 import com.jspy.ekart.dto.Customerdto;
 import com.jspy.ekart.dto.Items;
 import com.jspy.ekart.dto.Productdto;
 import com.jspy.ekart.dto.Vendordto;
 import com.jspy.ekart.repository.CustomerRepository;
 import com.jspy.ekart.repository.ItemRepository;
+import com.jspy.ekart.repository.OrderRepository;
 import com.jspy.ekart.repository.ProductRepository;
 import com.jspy.ekart.service.CustomerService;
 import com.jspy.ekart.service.VendorService;
+import com.razorpay.Item;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.json.JSONObject;
 
 @Controller
 public class EkartController {
@@ -48,6 +50,9 @@ public class EkartController {
 
 	@Autowired
 	ItemRepository itemRepository;
+
+	@Autowired
+	OrderRepository orderRepository;
 
 	@Value("${admin.email}")
 	String adminEmail;
@@ -340,7 +345,7 @@ public class EkartController {
 			} else {
 				customerdto.getCart().getItems().remove(item);
 				customerRepository.save(customerdto);
-				session.setAttribute("failure",  "Product Removed from Cart");
+				session.setAttribute("failure", "Product Removed from Cart");
 				session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
 				return "redirect:/customer/cart";
 			}
@@ -349,6 +354,87 @@ public class EkartController {
 			return "redirect:/customer/login";
 		}
 	}
-	
-	
+
+	@GetMapping("/payment")
+	public String payment(HttpSession session, ModelMap modelMap) {
+		Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+		if (session.getAttribute("customerdto") != null) {
+			try {
+				double amount = customerdto.getCart().getItems().stream().mapToDouble(i -> i.getProductPrice()).sum();
+				RazorpayClient razorpayClient = new RazorpayClient("rzp_test_3hnFm8G3UzuKoD", "AbyiciRQXiHw1KFN0FmXQt5J");
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("currency", "INR");
+				jsonObject.put("amount", amount * 100);
+
+				Order order = razorpayClient.orders.create(jsonObject);
+				modelMap.put("key", "rzp_test_3hnFm8G3UzuKoD");
+				modelMap.put("id", order.get("id"));
+				modelMap.put("amount", amount * 100);
+				modelMap.put("customerdto", customerdto);
+				return "payment.html";
+			} catch (RazorpayException e) {
+				session.setAttribute("failure", "Invalid Session, First Login");
+				return "redirect:/customer/login";
+			}
+		} else {
+			session.setAttribute("failure", "Invalid Session, First Login");
+			return "redirect:/customer/login";
+		}
+	}
+
+	@PostMapping("/success")
+	public String paymentSucess(com.jspy.ekart.dto.Order order, HttpSession session) {
+		if (session.getAttribute("customerdto") != null) {
+			Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+			order.setCustomerdto(customerdto);
+			order.setTotalPrice(customerdto.getCart().getItems().stream().mapToDouble(i -> i.getProductPrice()).sum());
+
+			List<Items> items = customerdto.getCart().getItems();
+			System.out.println(items.size());
+
+			List<Items> orderItems = order.getItems();
+			for (Items item : items) {
+				Items item2 = new Items();
+				item2.setProductCategory(item.getProductCategory());
+				item2.setProductDescription(item.getProductDescription());
+				item2.setProductImageLink(item.getProductImageLink());
+				item2.setProductName(item.getProductName());
+				item2.setProductPrice(item.getProductPrice());
+				item2.setQuantity(item.getQuantity());
+				orderItems.add(item2);
+			}
+
+			order.setItems(orderItems);
+			orderRepository.save(order);
+
+			customerdto.getCart().getItems().clear();
+			customerRepository.save(customerdto);
+
+			session.setAttribute("customerdto", customerRepository.findById(customerdto.getId()).get());
+			session.setAttribute("success", "Order Placed Success");
+			return "redirect:/customer/home";
+		} else {
+			session.setAttribute("failure", "Invalid Session, First Login");
+			return "redirect:/customer/login";
+		}
+	}
+
+	@GetMapping("/customer/previousorders")
+	public String viewOrders(HttpSession session, ModelMap modelMap) {
+		if (session.getAttribute("customerdto") != null) {
+			Customerdto customerdto = (Customerdto) session.getAttribute("customerdto");
+			List<com.jspy.ekart.dto.Order> orders = orderRepository.findByCustomerdto(customerdto);
+			if (orders.isEmpty()) {
+				session.setAttribute("success", "No Orders Placed Yet");
+				return "redirect:/customer/home";
+			} else {
+				modelMap.put("orders", orders);
+				return "customer-view-orders.html";
+			}
+
+		} else {
+			session.setAttribute("failure", "Invalid Session, First Login");
+			return "redirect:/customer/login";
+		}
+	}
 }
